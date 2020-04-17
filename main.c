@@ -5,6 +5,7 @@
 #include <linux/tcp.h>
 #include <net/sock.h>
 
+#include "bignum.h"
 #include "http_server.h"
 
 #define DEFAULT_PORT 8081

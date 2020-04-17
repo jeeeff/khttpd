@@ -2,15 +2,16 @@ KDIR=/lib/modules/$(shell uname -r)/build
 
 CFLAGS_user = -std=gnu11 -Wall -Wextra -Werror
 LDFLAGS_user = -lpthread
-
+TARGET_MODULE := khttpd
 obj-m += khttpd.o
 khttpd-objs := \
 	http_parser.o \
 	http_server.o \
+        bignum.o \
 	main.o
 
 GIT_HOOKS := .git/hooks/applied
-all: $(GIT_HOOKS) http_parser.c htstress
+all: $(GIT_HOOKS) bignum.c http_parser.c htstress
 	make -C $(KDIR) M=$(PWD) modules
 
 $(GIT_HOOKS):
@@ -26,6 +27,21 @@ check: all
 clean:
 	make -C $(KDIR) M=$(PWD) clean
 	$(RM) htstress
+
+load:
+	sudo insmod $(TARGET_MODULE).ko port=1999
+
+unload:
+	sudo rmmod $(TARGET_MODULE) || true >/dev/null
+
+relaod:
+	$(MAKE) unload
+	sudo dmesg -C
+	$(MAKE) load
+
+request:
+	wget localhost:1999/fib/$(k)
+	dmesg
 
 # Download http_parser.[ch] from nodejs/http-parser repository
 # the inclusion of standard header files such as <string.h> will be replaced
