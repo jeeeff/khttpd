@@ -39,6 +39,14 @@ relaod:
 	sudo dmesg -C
 	$(MAKE) load
 
+verify:
+	$(MAKE) unload
+	$(MAKE) load
+	@./fibcheck.sh 1/10
+	@./fibcheck.sh 100/10
+	@./fibcheck.sh 1000/10
+	@./fibcheck.sh 10000/10
+
 request:
 	wget localhost:1999/fib/$(k)
 	dmesg

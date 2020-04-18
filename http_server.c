@@ -239,7 +239,6 @@ static void http_server_worker(struct work_struct *work)
         .on_body = http_parser_callback_body,
         .on_message_complete = http_parser_callback_message_complete};
     struct http_request request;
-    struct socket *socket = (struct socket *) arg;
     struct khttpd_work_data *worker =
         container_of(work, struct khttpd_work_data, khttpd_work);
 
